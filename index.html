@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor Percentage Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input[type="number"] {
+            font-family: 'Courier New', monospace;
+        }
+        
+        .calculated {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .calculated label {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .percentage-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 8px;
+        }
+        
+        .percentage-display.warning {
+            color: #f59e0b;
+        }
+        
+        .percentage-display.danger {
+            color: #ef4444;
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .history-section {
+            padding: 0 30px 30px;
+        }
+        
+        .history-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .history-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .history-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        
+        .history-time {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .history-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            font-size: 14px;
+        }
+        
+        .history-detail {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .history-label {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .history-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .no-history {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .percentage-display {
+                font-size: 36px;
+            }
+            
+            .history-details {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Labor Tracker</h1>
+            <p id="current-date"></p>
+        </div>
+        
+        <div class="form-section">
+            <div class="success-message" id="successMessage">
+                ✓ Entry saved successfully!
+            </div>
+            
+            <form id="laborForm">
+                <div class="form-group">
+                    <label for="store">Store Location</label>
+                    <select id="store" required>
+                        <option value="">Select a store...</option>
+                        <option value="2444 Leighway - KY2524">2444 Leighway - KY2524</option>
+                        <option value="Palomar - KY2842">Palomar - KY2842</option>
+                        <option value="Connector Road - KY3286">Connector Road - KY3286</option>
+                        <option value="Danville - KY2086">Danville - KY2086</option>
+                        <option value="Euclid - KY2114">Euclid - KY2114</option>
+                        <option value="Frankfort - KY2294">Frankfort - KY2294</option>
+                        <option value="Sir Barton - KY2521">Sir Barton - KY2521</option>
+                        <option value="Tiverton - KY2274">Tiverton - KY2274</option>
+                        <option value="Hurstbourne - KY2546">Hurstbourne - KY2546</option>
+                        <option value="Preston - KY2811">Preston - KY2811</option>
+                        <option value="Middletown - KY2837">Middletown - KY2837</option>
+                        <option value="Harley Center - KY2098">Harley Center - KY2098</option>
+                        <option value="Summit - KY2131">Summit - KY2131</option>
+                        <option value="Charlestown - IN2431">Charlestown - IN2431</option>
+                        <option value="Poplar Level - KY2641">Poplar Level - KY2641</option>
+                        <option value="Dixie Highway - KY2731">Dixie Highway - KY2731</option>
+                        <option value="Veterans - IN2880">Veterans - IN2880</option>
+                        <option value="Wesley Commons - IN3044">Wesley Commons - IN3044</option>
+                        <option value="Jeffersonville - IN2021">Jeffersonville - IN2021</option>
+                        <option value="Breckenridge Lane - KY2029">Breckenridge Lane - KY2029</option>
+                        <option value="Schuster - KY2493">Schuster - KY2493</option>
+                        <option value="Westport Village - KY2632">Westport Village - KY2632</option>
+                        <option value="S. 4th St - KY2713">S. 4th St - KY2713</option>
+                        <option value="University of Louisville - KY2753">University of Louisville - KY2753</option>
+                        <option value="Blankenbaker - KY2888">Blankenbaker - KY2888</option>
+                        <option value="Elizabethtown - KY2937">Elizabethtown - KY2937</option>
+                        <option value="Jefferson Commons - KY2166">Jefferson Commons - KY2166</option>
+                        <option value="Carson - PA2166">Carson - PA2166</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkTime">Check-in Time</label>
+                    <select id="checkTime" required>
+                        <option value="">Select time...</option>
+                        <option value="1pm">1pm</option>
+                        <option value="4pm">4pm</option>
+                        <option value="7pm">7pm</option>
+                        <option value="Close">Close</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grossSales">Gross Sales ($)</label>
+                    <input type="number" id="grossSales" step="0.01" min="0" required placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="laborDollars">Labor Dollars ($)</label>
+                    <input type="number" id="laborDollars" step="0.01" min="0" required placeholder="0.00">
+                </div>
+                
+                <div class="calculated">
+                    <label>Gross Labor Percentage</label>
+                    <div class="percentage-display" id="percentage">0.0%</div>
+                </div>
+                
+                <button type="submit">Save Entry</button>
+            </form>
+        </div>
+        
+        <div class="history-section">
+            <h2 class="history-title">Today's Entries</h2>
+            <div class="history-grid" id="historyContainer">
+                <div class="no-history">No entries yet for today</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg6sdwxr788HymNLHF3skIro7P6SWrvHE",
+            authDomain: "labor-tracker-bbbaa.firebaseapp.com",
+            projectId: "labor-tracker-bbbaa",
+            storageBucket: "labor-tracker-bbbaa.firebasestorage.app",
+            messagingSenderId: "939951401620",
+            appId: "1:939951401620:web:f2cd20c38c8e36a5466281"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Display current date
+        const dateElement = document.getElementById('current-date');
+        const today = new Date();
+        dateElement.textContent = today.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Form elements
+        const form = document.getElementById('laborForm');
+        const storeSelect = document.getElementById('store');
+        const checkTimeSelect = document.getElementById('checkTime');
+        const grossSalesInput = document.getElementById('grossSales');
+        const laborDollarsInput = document.getElementById('laborDollars');
+        const percentageDisplay = document.getElementById('percentage');
+        const successMessage = document.getElementById('successMessage');
+        const historyContainer = document.getElementById('historyContainer');
+        
+        // Calculate percentage on input
+        function calculatePercentage() {
+            const sales = parseFloat(grossSalesInput.value) || 0;
+            const labor = parseFloat(laborDollarsInput.value) || 0;
+            
+            if (sales > 0) {
+                const percentage = (labor / sales) * 100;
+                percentageDisplay.textContent = percentage.toFixed(1) + '%';
+                
+                // Color coding
+                percentageDisplay.classList.remove('warning', 'danger');
+                if (percentage > 35) {
+                    percentageDisplay.classList.add('danger');
+                } else if (percentage > 30) {
+                    percentageDisplay.classList.add('warning');
+                }
+            } else {
+                percentageDisplay.textContent = '0.0%';
+                percentageDisplay.classList.remove('warning', 'danger');
+            }
+        }
+        
+        grossSalesInput.addEventListener('input', calculatePercentage);
+        laborDollarsInput.addEventListener('input', calculatePercentage);
+        
+        // Get today's date string
+        function getTodayDateString() {
+            return new Date().toISOString().split('T')[0];
+        }
+        
+        // Load entries for today
+        async function loadTodaysEntries() {
+            try {
+                const todayDate = getTodayDateString();
+                const selectedStore = storeSelect.value;
+                
+                // Query Firestore for today's entries
+                let q = query(
+                    collection(db, 'labor_entries'),
+                    where('date', '==', todayDate)
+                );
+                
+                // Add store filter if selected
+                if (selectedStore) {
+                    q = query(
+                        collection(db, 'labor_entries'),
+                        where('date', '==', todayDate),
+                        where('store', '==', selectedStore)
+                    );
+                }
+                
+                const querySnapshot = await getDocs(q);
+                const entries = [];
+                querySnapshot.forEach((doc) => {
+                    entries.push(doc.data());
+                });
+                
+                if (entries.length === 0) {
+                    const message = selectedStore ? 'No entries yet for this store today' : 'No entries yet for today';
+                    historyContainer.innerHTML = `<div class="no-history">${message}</div>`;
+                    return;
+                }
+                
+                historyContainer.innerHTML = entries
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .map(entry => {
+                        const time = new Date(entry.timestamp).toLocaleTimeString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit'
+                        });
+                        
+                        return `
+                            <div class="history-card">
+                                <div class="history-time">${entry.checkTime} Check - ${time}</div>
+                                <div class="history-details">
+                                    <div class="history-detail">
+                                        <span class="history-label">Store</span>
+                                        <span class="history-value">${entry.store}</span>
+                                    </div>
+                                    <div class="history-detail">
+                                        <span class="history-label">Gross Sales</span>
+                                        <span class="history-value">$${parseFloat(entry.grossSales).toFixed(2)}</span>
+                                    </div>
+                                    <div class="history-detail">
+                                        <span class="history-label">Labor</span>
+                                        <span class="history-value">$${parseFloat(entry.laborDollars).toFixed(2)}</span>
+                                    </div>
+                                    <div class="history-detail">
+                                        <span class="history-label">Labor %</span>
+                                        <span class="history-value">${entry.percentage}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+            } catch (error) {
+                console.error('Error loading entries:', error);
+                historyContainer.innerHTML = '<div class="no-history">Error loading entries. Please refresh.</div>';
+            }
+        }
+        
+        // Update history when store selection changes
+        storeSelect.addEventListener('change', loadTodaysEntries);
+        
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const sales = parseFloat(grossSalesInput.value);
+            const labor = parseFloat(laborDollarsInput.value);
+            const percentage = ((labor / sales) * 100).toFixed(1);
+            
+            const entry = {
+                store: storeSelect.value,
+                checkTime: checkTimeSelect.value,
+                grossSales: sales,
+                laborDollars: labor,
+                percentage: percentage,
+                timestamp: new Date().toISOString(),
+                date: getTodayDateString()
+            };
+            
+            try {
+                // Save to Firestore
+                await addDoc(collection(db, 'labor_entries'), entry);
+                
+                // Show success message
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+                // Reset form (except store selection)
+                checkTimeSelect.value = '';
+                grossSalesInput.value = '';
+                laborDollarsInput.value = '';
+                percentageDisplay.textContent = '0.0%';
+                percentageDisplay.classList.remove('warning', 'danger');
+                
+                // Reload history
+                loadTodaysEntries();
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                alert('Error saving entry. Please try again.');
+            }
+        });
+        
+        // Load entries on page load
+        loadTodaysEntries();
+    </script>
+</body>
+</html>
