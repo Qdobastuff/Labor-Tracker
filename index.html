@@ -80,107 +80,6 @@
             font-family: 'Courier New', monospace;
         }
         
-        .store-selector {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 16px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .district-section {
-            margin-bottom: 20px;
-        }
-        
-        .district-section:last-child {
-            margin-bottom: 0;
-        }
-        
-        .district-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .district-header:hover {
-            background: #e9ecef;
-        }
-        
-        .district-checkbox {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .district-name {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 15px;
-        }
-        
-        .store-list {
-            margin-left: 28px;
-            display: grid;
-            gap: 8px;
-        }
-        
-        .store-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        
-        .store-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .store-checkbox {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-        
-        .store-label {
-            cursor: pointer;
-            font-size: 14px;
-            color: #333;
-        }
-        
-        .selected-stores {
-            margin-top: 12px;
-            padding: 12px;
-            background: #e0e7ff;
-            border-radius: 6px;
-            min-height: 40px;
-        }
-        
-        .selected-stores-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-        
-        .selected-store-tag {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin: 4px 4px 4px 0;
-        }
-        
         .calculated {
             background: #f8f9fa;
             padding: 20px;
@@ -353,14 +252,48 @@
             
             <form id="laborForm">
                 <div class="form-group">
-                    <label>Select Store(s)</label>
-                    <div class="store-selector" id="storeSelector">
-                        <!-- Districts will be populated here -->
-                    </div>
-                    <div class="selected-stores">
-                        <div class="selected-stores-label">Selected:</div>
-                        <div id="selectedStoresTags"></div>
-                    </div>
+                    <label for="storeSelect">Store Location</label>
+                    <select id="storeSelect" required>
+                        <option value="">Select a store...</option>
+                        <optgroup label="Benedict">
+                            <option value="2444 - Richmond">2444 - Richmond</option>
+                            <option value="2524 - Palomar">2524 - Palomar</option>
+                            <option value="2842 - Georgetown">2842 - Georgetown</option>
+                            <option value="3286 - Danville">3286 - Danville</option>
+                        </optgroup>
+                        <optgroup label="Faluconer">
+                            <option value="2086 - Euclid">2086 - Euclid</option>
+                            <option value="2114 - Frankfort">2114 - Frankfort</option>
+                            <option value="2294 - Sir Barton">2294 - Sir Barton</option>
+                            <option value="2521 - Tiverton">2521 - Tiverton</option>
+                        </optgroup>
+                        <optgroup label="Maddox">
+                            <option value="2274 - Hurstborne">2274 - Hurstborne</option>
+                            <option value="2546 - Preston">2546 - Preston</option>
+                            <option value="2811 - Middletown">2811 - Middletown</option>
+                            <option value="2837 - Harley Center">2837 - Harley Center</option>
+                        </optgroup>
+                        <optgroup label="Reid">
+                            <option value="2098 - Summit">2098 - Summit</option>
+                            <option value="2131 - Charlestown">2131 - Charlestown</option>
+                            <option value="2431 - Poplar Level">2431 - Poplar Level</option>
+                            <option value="2641 - Dixie Hwy">2641 - Dixie Hwy</option>
+                            <option value="2731 - Veterans">2731 - Veterans</option>
+                            <option value="2880 - Wesley Commons">2880 - Wesley Commons</option>
+                            <option value="3044 - Jeffersonville IN">3044 - Jeffersonville IN</option>
+                            <option value="2166 - Carson">2166 - Carson</option>
+                        </optgroup>
+                        <optgroup label="Spitznagel">
+                            <option value="2021 - Breckenridge Ln">2021 - Breckenridge Ln</option>
+                            <option value="2029 - Schuster">2029 - Schuster</option>
+                            <option value="2493 - Westport Village">2493 - Westport Village</option>
+                            <option value="2632 - S 4th Street">2632 - S 4th Street</option>
+                            <option value="2713 - U OF L">2713 - U OF L</option>
+                            <option value="2753 - Blankenbaker">2753 - Blankenbaker</option>
+                            <option value="2888 - Elizabethtown">2888 - Elizabethtown</option>
+                            <option value="2937 - Jefferson Commons">2937 - Jefferson Commons</option>
+                        </optgroup>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -389,7 +322,7 @@
                     <div class="percentage-display" id="percentage">0.0%</div>
                 </div>
                 
-                <button type="submit" id="submitBtn">Save Entry</button>
+                <button type="submit">Save Entry</button>
             </form>
         </div>
         
@@ -402,10 +335,9 @@
     </div>
     
     <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-firestore-compat.min.js"></script>
+    <script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCg6sdwxr788HymNLHF3skIro7P6SWrvHE",
@@ -417,52 +349,8 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        // Store data organized by district
-        const districts = {
-            "Benedict": [
-                { id: "2444", name: "Richmond" },
-                { id: "2524", name: "Palomar" },
-                { id: "2842", name: "Georgetown" }
-            ],
-            "Faluconer": [
-                { id: "2086", name: "Euclid" },
-                { id: "2114", name: "Frankfort" },
-                { id: "2294", name: "Sir Barton" },
-                { id: "2521", name: "Tiverton" }
-            ],
-            "Maddox": [
-                { id: "2274", name: "Hurstborne" },
-                { id: "2546", name: "Preston" },
-                { id: "2811", name: "Middletown" },
-                { id: "2837", name: "Harley Center" }
-            ],
-            "Reid": [
-                { id: "2098", name: "Summit" },
-                { id: "2131", name: "Charlestown" },
-                { id: "2431", name: "Poplar Level" },
-                { id: "2641", name: "Dixie Hwy" },
-                { id: "2731", name: "Veterans" },
-                { id: "2880", name: "Wesley Commons" },
-                { id: "3044", name: "Jeffersonville IN" },
-                { id: "2166", name: "Carson" }
-            ],
-            "Spitznagel": [
-                { id: "2021", name: "Breckenridge Ln" },
-                { id: "2029", name: "Schuster" },
-                { id: "2493", name: "Westport Village" },
-                { id: "2632", name: "S 4th Street" },
-                { id: "2713", name: "U OF L" },
-                { id: "2753", name: "Blankenbaker" },
-                { id: "2888", name: "Elizabethtown" },
-                { id: "2937", name: "Jefferson Commons" }
-            ]
-        };
-        
-        // Track selected stores
-        let selectedStores = new Set();
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
         
         // Display current date
         const dateElement = document.getElementById('current-date');
@@ -474,130 +362,9 @@
             day: 'numeric' 
         });
         
-        // Build store selector
-        function buildStoreSelector() {
-            const selector = document.getElementById('storeSelector');
-            selector.innerHTML = '';
-            
-            Object.keys(districts).forEach(districtName => {
-                const districtSection = document.createElement('div');
-                districtSection.className = 'district-section';
-                
-                // District header with checkbox
-                const districtHeader = document.createElement('div');
-                districtHeader.className = 'district-header';
-                
-                const districtCheckbox = document.createElement('input');
-                districtCheckbox.type = 'checkbox';
-                districtCheckbox.className = 'district-checkbox';
-                districtCheckbox.id = `district-${districtName}`;
-                
-                const districtLabel = document.createElement('span');
-                districtLabel.className = 'district-name';
-                districtLabel.textContent = districtName;
-                
-                districtHeader.appendChild(districtCheckbox);
-                districtHeader.appendChild(districtLabel);
-                
-                // District header click toggles all stores
-                districtHeader.addEventListener('click', (e) => {
-                    if (e.target !== districtCheckbox) {
-                        districtCheckbox.checked = !districtCheckbox.checked;
-                    }
-                    toggleDistrict(districtName, districtCheckbox.checked);
-                });
-                
-                // Store list
-                const storeList = document.createElement('div');
-                storeList.className = 'store-list';
-                
-                districts[districtName].forEach(store => {
-                    const storeItem = document.createElement('div');
-                    storeItem.className = 'store-item';
-                    
-                    const storeCheckbox = document.createElement('input');
-                    storeCheckbox.type = 'checkbox';
-                    storeCheckbox.className = 'store-checkbox';
-                    storeCheckbox.id = `store-${store.id}`;
-                    storeCheckbox.dataset.storeId = store.id;
-                    storeCheckbox.dataset.storeName = store.name;
-                    storeCheckbox.dataset.district = districtName;
-                    
-                    const storeLabel = document.createElement('label');
-                    storeLabel.className = 'store-label';
-                    storeLabel.htmlFor = `store-${store.id}`;
-                    storeLabel.textContent = `${store.id} - ${store.name}`;
-                    
-                    storeCheckbox.addEventListener('change', (e) => {
-                        toggleStore(store.id, store.name, e.target.checked);
-                        updateDistrictCheckbox(districtName);
-                    });
-                    
-                    storeItem.appendChild(storeCheckbox);
-                    storeItem.appendChild(storeLabel);
-                    storeList.appendChild(storeItem);
-                });
-                
-                districtSection.appendChild(districtHeader);
-                districtSection.appendChild(storeList);
-                selector.appendChild(districtSection);
-            });
-        }
-        
-        // Toggle entire district
-        function toggleDistrict(districtName, checked) {
-            districts[districtName].forEach(store => {
-                const checkbox = document.getElementById(`store-${store.id}`);
-                if (checkbox) {
-                    checkbox.checked = checked;
-                    toggleStore(store.id, store.name, checked);
-                }
-            });
-        }
-        
-        // Update district checkbox based on store selections
-        function updateDistrictCheckbox(districtName) {
-            const storesInDistrict = districts[districtName];
-            const selectedInDistrict = storesInDistrict.filter(store => 
-                selectedStores.has(`${store.id} - ${store.name}`)
-            ).length;
-            
-            const districtCheckbox = document.getElementById(`district-${districtName}`);
-            if (districtCheckbox) {
-                districtCheckbox.checked = selectedInDistrict === storesInDistrict.length;
-                districtCheckbox.indeterminate = selectedInDistrict > 0 && selectedInDistrict < storesInDistrict.length;
-            }
-        }
-        
-        // Toggle individual store
-        function toggleStore(id, name, checked) {
-            const storeKey = `${id} - ${name}`;
-            if (checked) {
-                selectedStores.add(storeKey);
-            } else {
-                selectedStores.delete(storeKey);
-            }
-            updateSelectedStoresTags();
-        }
-        
-        // Update selected stores display
-        function updateSelectedStoresTags() {
-            const tagsContainer = document.getElementById('selectedStoresTags');
-            if (selectedStores.size === 0) {
-                tagsContainer.innerHTML = '<span style="color: #999; font-size: 13px;">None selected</span>';
-            } else {
-                tagsContainer.innerHTML = Array.from(selectedStores)
-                    .map(store => `<span class="selected-store-tag">${store}</span>`)
-                    .join('');
-            }
-            
-            // Enable/disable submit button
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = selectedStores.size === 0;
-        }
-        
         // Form elements
         const form = document.getElementById('laborForm');
+        const storeSelect = document.getElementById('storeSelect');
         const checkTimeSelect = document.getElementById('checkTime');
         const grossSalesInput = document.getElementById('grossSales');
         const laborDollarsInput = document.getElementById('laborDollars');
@@ -638,34 +405,71 @@
         async function loadTodaysEntries() {
             try {
                 const todayDate = getTodayDateString();
+                const selectedStore = storeSelect.value;
                 
-                let q = query(
-                    collection(db, 'labor_entries'),
-                    where('date', '==', todayDate)
-                );
+                let q = db.collection('labor_entries')
+                    .where('date', '==', todayDate);
                 
-                // Filter by selected stores if any
-                if (selectedStores.size > 0) {
-                    const storeArray = Array.from(selectedStores);
-                    q = query(
-                        collection(db, 'labor_entries'),
-                        where('date', '==', todayDate),
-                        where('stores', 'array-contains-any', storeArray.slice(0, 10)) // Firestore limit
-                    );
-                }
-                
-                const querySnapshot = await getDocs(q);
-                const entries = [];
+                const querySnapshot = await q.get();
+                let entries = [];
                 querySnapshot.forEach((doc) => {
                     entries.push(doc.data());
                 });
                 
+                // Filter by selected store if one is selected
+                if (selectedStore) {
+                    entries = entries.filter(entry => {
+                        // Handle both old format (store) and new format (stores array)
+                        if (entry.stores && Array.isArray(entry.stores)) {
+                            return entry.stores.includes(selectedStore);
+                        } else if (entry.store) {
+                            return entry.store === selectedStore;
+                        }
+                        return false;
+                    });
+                }
+                
                 if (entries.length === 0) {
-                    historyContainer.innerHTML = '<div class="no-history">No entries yet for today</div>';
+                    const message = selectedStore ? `No entries yet for ${selectedStore} today` : 'No entries yet for today';
+                    historyContainer.innerHTML = `<div class="no-history">${message}</div>`;
                     return;
                 }
                 
-                historyContainer.innerHTML = entries
+                // Calculate combined totals
+                const totalSales = entries.reduce((sum, e) => sum + parseFloat(e.grossSales || 0), 0);
+                const totalLabor = entries.reduce((sum, e) => sum + parseFloat(e.laborDollars || 0), 0);
+                const combinedPercentage = totalSales > 0 ? ((totalLabor / totalSales) * 100).toFixed(1) : '0.0';
+                
+                // Build HTML with combined total at top
+                let html = '';
+                
+                // Add combined total card
+                if (selectedStore && entries.length > 1) {
+                    const percentageClass = parseFloat(combinedPercentage) > 35 ? 'danger' : 
+                                          parseFloat(combinedPercentage) > 30 ? 'warning' : 'good';
+                    html += `
+                        <div class="history-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px;">
+                            <div style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">📊 Today's Combined Total</div>
+                            <div class="history-details">
+                                <div class="history-detail">
+                                    <span class="history-label" style="color: rgba(255,255,255,0.9);">Total Sales</span>
+                                    <span class="history-value" style="color: white; font-size: 18px;">$${totalSales.toFixed(2)}</span>
+                                </div>
+                                <div class="history-detail">
+                                    <span class="history-label" style="color: rgba(255,255,255,0.9);">Total Labor</span>
+                                    <span class="history-value" style="color: white; font-size: 18px;">$${totalLabor.toFixed(2)}</span>
+                                </div>
+                                <div class="history-detail">
+                                    <span class="history-label" style="color: rgba(255,255,255,0.9);">Combined Labor %</span>
+                                    <span class="history-value" style="color: white; font-size: 20px; font-weight: 800;">${combinedPercentage}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Add individual entries
+                html += entries
                     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                     .map(entry => {
                         const time = new Date(entry.timestamp).toLocaleTimeString('en-US', {
@@ -673,14 +477,9 @@
                             minute: '2-digit'
                         });
                         
-                        const storesDisplay = entry.stores.join(', ');
-                        
                         return `
                             <div class="history-card">
                                 <div class="history-time">${entry.checkTime} Check - ${time}</div>
-                                <div style="margin-bottom: 12px; color: #667eea; font-size: 13px;">
-                                    ${storesDisplay}
-                                </div>
                                 <div class="history-details">
                                     <div class="history-detail">
                                         <span class="history-label">Gross Sales</span>
@@ -698,27 +497,28 @@
                             </div>
                         `;
                     }).join('');
+                
+                historyContainer.innerHTML = html;
             } catch (error) {
                 console.error('Error loading entries:', error);
                 historyContainer.innerHTML = '<div class="no-history">Error loading entries. Please refresh.</div>';
             }
         }
         
+        // Update history when store selection changes
+        storeSelect.addEventListener('change', loadTodaysEntries);
+        
         // Form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            if (selectedStores.size === 0) {
-                alert('Please select at least one store');
-                return;
-            }
+            console.log('Form submitted!');
             
             const sales = parseFloat(grossSalesInput.value);
             const labor = parseFloat(laborDollarsInput.value);
             const percentage = ((labor / sales) * 100).toFixed(1);
             
             const entry = {
-                stores: Array.from(selectedStores),
+                store: storeSelect.value,
                 checkTime: checkTimeSelect.value,
                 grossSales: sales,
                 laborDollars: labor,
@@ -727,8 +527,12 @@
                 date: getTodayDateString()
             };
             
+            console.log('Entry to save:', entry);
+            
             try {
-                await addDoc(collection(db, 'labor_entries'), entry);
+                console.log('Attempting to save to Firestore...');
+                await db.collection('labor_entries').add(entry);
+                console.log('Save successful!');
                 
                 successMessage.classList.add('show');
                 setTimeout(() => {
@@ -744,13 +548,11 @@
                 loadTodaysEntries();
             } catch (error) {
                 console.error('Error saving entry:', error);
-                alert('Error saving entry. Please try again.');
+                alert('Error saving entry: ' + error.message);
             }
         });
         
         // Initialize
-        buildStoreSelector();
-        updateSelectedStoresTags();
         loadTodaysEntries();
     </script>
 </body>
