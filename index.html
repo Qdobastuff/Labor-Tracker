@@ -351,6 +351,14 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
+        // Make.com webhook URL — paste your webhook URL here
+        const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/z74a4dwd3vpw4kesj61bnq2sh28w54yq';
+        
+        // Hardcoded LY sales overrides (store_code: daily sales target)
+        const LY_SALES_OVERRIDES = {
+            '3286': 6000  // Danville — fixed $6,000 LY target indefinitely
+        };
+        
         // Display current date
         const dateElement = document.getElementById('current-date');
         const today = new Date();
@@ -583,22 +591,32 @@
             let laborBudget = 0.25;
             let closingHour = 22;
             
+            // Apply hardcoded LY override if set for this store
+            if (LY_SALES_OVERRIDES[storeCode] !== undefined) {
+                lySales = LY_SALES_OVERRIDES[storeCode];
+                console.log(`Using hardcoded LY override for ${storeCode}: $${lySales}`);
+            }
+            
             try {
                 console.log(`Querying Firebase: store_code="${storeCode}", date="${lastYearDate}"`);
-                const lySalesQuery = await db.collection('last_year_sales')
-                    .where('store_code', '==', storeCode)
-                    .where('date', '==', lastYearDate)
-                    .limit(1)
-                    .get();
                 
-                console.log(`Firebase returned ${lySalesQuery.size} results`);
-                
-                if (!lySalesQuery.empty) {
-                    const doc = lySalesQuery.docs[0];
-                    lySales = parseFloat(doc.data().sales);
-                    console.log(`Found LY sales: $${lySales} for date ${doc.data().date}`);
-                } else {
-                    console.log(`No LY sales found for ${storeCode} on ${lastYearDate}`);
+                // Only query Firebase for LY sales if no override is set
+                if (LY_SALES_OVERRIDES[storeCode] === undefined) {
+                    const lySalesQuery = await db.collection('last_year_sales')
+                        .where('store_code', '==', storeCode)
+                        .where('date', '==', lastYearDate)
+                        .limit(1)
+                        .get();
+                    
+                    console.log(`Firebase returned ${lySalesQuery.size} results`);
+                    
+                    if (!lySalesQuery.empty) {
+                        const doc = lySalesQuery.docs[0];
+                        lySales = parseFloat(doc.data().sales);
+                        console.log(`Found LY sales: $${lySales} for date ${doc.data().date}`);
+                    } else {
+                        console.log(`No LY sales found for ${storeCode} on ${lastYearDate}`);
+                    }
                 }
                 
                 const budgetQuery = await db.collection('labor_budgets')
@@ -646,6 +664,32 @@
             
             try {
                 await db.collection('labor_entries').add(entry);
+                
+                // Send data to Make.com webhook → posts to Slack
+                try {
+                    await fetch(MAKE_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            store: entry.store,
+                            storeName: storeName,
+                            storeCode: storeCode,
+                            checkTime: entry.checkTime,
+                            grossSales: entry.grossSales,
+                            laborDollars: entry.laborDollars,
+                            percentage: entry.percentage,
+                            lySales: lySales,
+                            laborVariance: laborVariance.toFixed(1),
+                            dollarsPerHour: dollarsPerHour,
+                            hoursRemaining: hoursRemaining,
+                            slackMessage: slackMessage,
+                            timestamp: entry.timestamp
+                        })
+                    });
+                    console.log('Make webhook triggered successfully');
+                } catch (webhookErr) {
+                    console.warn('Make webhook failed (entry still saved):', webhookErr);
+                }
                 
                 successMessage.classList.add('show');
                 setTimeout(() => {
